@@ -1,11 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import AppRoutes from 'src/AppRoutes';
+import DataProvider from 'src/store/DataProvider';
 
 function App() {
   return (
-    <AppRoutes/>
+    <DataProvider>
+      <AppRoutes/>
+    </DataProvider>
   );
 }
 
