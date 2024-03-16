@@ -10,7 +10,7 @@ const AppLayout = (props: Props) => {
 		<Box className={'pt-16'}>
 			<CssBaseline />
 			<Navbar/>
-			<Box component="main" className={'flex'}>
+			<Box component="main">
 				<Outlet />
 			</Box>
 		</Box>
