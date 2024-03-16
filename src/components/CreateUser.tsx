@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Box, Button, TextField, Typography} from '@mui/material';
 import {User} from 'src/types';
-import { v4 as uuidv4 } from 'uuid';
+import {makeUserObject} from 'src/utils';
+
 
 type Props = {
 	onSubmit: (user: User) => void;
@@ -15,11 +16,7 @@ const CreateUser = ({onSubmit}: Props) => {
 		setUserName(e.target.value)
 	}
 	const handleSubmit = () => {
-		const address = uuidv4();
-		onSubmit({
-			name: userName,
-			address: `0x-${address}`,
-		})
+		onSubmit(makeUserObject(userName))
 		setUserName('');
 	}
 	return (

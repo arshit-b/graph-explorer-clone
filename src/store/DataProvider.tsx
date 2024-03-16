@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useState} from 'react';
 import {User} from 'src/types';
+import {makeUserObject} from 'src/utils';
 
 type DataProvider = {
 	userList: User[];
@@ -7,8 +8,10 @@ type DataProvider = {
 };
 
 const Context = createContext<DataProvider | null>(null);
+
+const initialUsers: User[] = ['Arshit', 'Harsh', 'Hardik', 'Tirth', 'Raj', '0xPPL'].map((name) => makeUserObject(name));
 const DataProvider = ({children}: React.PropsWithChildren) => {
-	const [userList, setUseList] = useState<User[]>([]);
+	const [userList, setUseList] = useState<User[]>(initialUsers);
 
 	const registerNewUser = (user: User) => {
 		setUseList((prevUserList) => [user, ...prevUserList]);

@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import AppLayout from 'src/components/AppLayout';
 import Users from 'src/pages/users';
+import Home from 'src/pages/home';
 
 type Props = {};
 const AppRoutes = (props: Props) => {
@@ -9,7 +10,7 @@ const AppRoutes = (props: Props) => {
 		<BrowserRouter>
 			<Routes>
 				<Route element={<AppLayout/>}>
-					<Route path="/" element={<p className={'text-black'}>home</p>} />
+					<Route path="/" element={<Home/>} />
 					<Route path="/0x" element={<Users/>} />
 				</Route>
 			</Routes>
