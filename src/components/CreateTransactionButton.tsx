@@ -53,6 +53,9 @@ const CreateTransactionButton = () => {
   };
   const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
+      setAmount(0);
+      setToUser(null);
+      setFromUser(null);
       setOpen(false);
     }
   };
@@ -64,11 +67,11 @@ const CreateTransactionButton = () => {
         <Add />
         Transaction
       </Button>
-      <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+      <Dialog keepMounted={false} disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>Create transaction</DialogTitle>
         <DialogContent>
           <Box component="form" className={'py-4'}>
-            <SelectUser value={fromUser} onChange={handleChangeFromUser} options={fromUserOptions} label={'From'}/>
+            <SelectUser className={'mt-4'} value={fromUser} onChange={handleChangeFromUser} options={fromUserOptions} label={'From'}/>
             <SelectUser className={'mt-4'} value={toUser} onChange={handleChangeToUser} options={toUserOptions} label={'To'}/>
             <Input
               type={'number'}
