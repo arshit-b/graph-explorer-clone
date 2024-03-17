@@ -18,6 +18,7 @@ import {Add} from '@mui/icons-material';
 
 type Props = {
 	window?: () => Window;
+	onPressCreateTransaction: () => void;
 };
 
 const navItems = [{
@@ -82,7 +83,7 @@ const Navbar = (props: Props) => {
 					<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
 						<NavbarItems onClickItem={(_, path) => handleClickNavItem(path)}/>
 					</Box>
-					<Button sx={{ color: '#fff' }}>
+					<Button sx={{ color: '#fff' }} onClick={props.onPressCreateTransaction}>
 						<Add/>
 						Create txn
 					</Button>
