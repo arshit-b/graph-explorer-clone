@@ -1,7 +1,17 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Box, Grid, Typography} from '@mui/material';
+import {
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import {useData} from 'src/store/DataProvider';
 import ForceGraph from 'react-force-graph-2d';
+import {User} from 'src/types';
+import UserItem from 'src/components/UserItem';
 
 const Home = () => {
   const {transactions, userList} = useData();
@@ -24,6 +34,13 @@ const Home = () => {
     [userList, transactions],
   );
 
+  const useIdMap = useMemo(() => {
+    return userList.reduce<{[address: string]: User}>(
+      (result, user) => ({...result, [user.address]: user}),
+      {},
+    );
+  }, [userList]);
+
   useEffect(() => {
     const handleResize = () => {
       setWindowDimension({
@@ -39,23 +56,44 @@ const Home = () => {
     };
   }, []);
 
-  const graphWidth = windowDimension.width * 0.5;
+  const graphWidth = windowDimension.width * 0.67;
   const graphHeight = windowDimension.height - 64;
 
   return (
-    <Grid container>
-      <Grid item xs={'auto'}>
-        {transactions.map((transactions) => (
-          <Box>
-            <Typography variant={'h6'}>{transactions.fromAddress}</Typography>
-            <Typography variant={'h6'}>{transactions.toAddress}</Typography>
-            <Typography variant={'subtitle1'}>
-              {transactions.amount}
-            </Typography>
-          </Box>
-        ))}
+    <Grid container height={'100%'} width={'100%'} overflow={'hidden'}>
+      <Grid item xs={4} height={'inherit'} className={'flex overflow-y-auto'}>
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>From</TableCell>
+                <TableCell>To</TableCell>
+                <TableCell align="right">Amount</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {transactions.map((transaction) => (
+                <TableRow key={transaction.id}>
+                  <TableCell component="th" scope="row">
+                    <UserItem
+                      truncateAddress
+                      user={useIdMap[transaction.fromAddress]}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <UserItem
+                      truncateAddress
+                      user={useIdMap[transaction.toAddress]}
+                    />
+                  </TableCell>
+                  <TableCell align="right">{transaction.amount}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
-      <Grid item xs={'auto'}>
+      <Grid height={'inherit'} item xs={8}>
         <ForceGraph
           width={graphWidth}
           height={graphHeight}

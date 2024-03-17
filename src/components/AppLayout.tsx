@@ -1,14 +1,19 @@
 import React from 'react';
-import {CssBaseline, Grid} from '@mui/material';
+import {Box, CssBaseline, Grid} from '@mui/material';
 import Navbar from 'src/components/Navbar';
 import {Outlet} from 'react-router-dom';
 
 const AppLayout = () => {
   return (
-    <Grid container className={'pt-16'}>
+    <Grid container height={'100vh'} display={'flex'} width={'100vw'}>
       <CssBaseline />
+
       <Navbar />
-      <Grid component="main" xs={12}>
+      <Grid
+        height={'calc(100% - 64px)'}
+        width={'100%'}
+        component="main"
+        xs={12}>
         <Outlet />
       </Grid>
     </Grid>

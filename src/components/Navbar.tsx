@@ -68,7 +68,7 @@ const Navbar = (props: Props) => {
 
   return (
     <>
-      <AppBar component={'nav'}>
+      <AppBar position={'relative'} component={'nav'}>
         <Toolbar className={'justify-between'}>
           <IconButton
             color="inherit"

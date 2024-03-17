@@ -4,24 +4,26 @@ import {Box, Typography} from '@mui/material';
 import {User} from 'src/types';
 
 type Props = {
-	user: User
+  user: User;
+  truncateAddress?: boolean;
 };
 
-const UserItem = ({user, ...restProps}: Props) => {
-	const {name, address} = user;
-	return (
-		<Box
-			key={`${name}-${address}`}
-			className={'flex items-center justify-center gap-2 border-b mt-2'}
-			{...restProps}
-		>
-			<Person className={'m-2'} />
-			<Box>
-				<Typography variant={'h6'}>{name}</Typography>
-				<Typography variant={'subtitle1'}>{address}</Typography>
-			</Box>
-		</Box>
-	);
-}
+const UserItem = ({user, truncateAddress, ...restProps}: Props) => {
+  const {name, address} = user;
+  return (
+    <Box
+      key={`${name}-${address}`}
+      className={'flex flex-row items-center gap-2'}
+      {...restProps}>
+      <Person className={'mr-2'} />
+      <Box>
+        <Typography variant={'h6'}>{name}</Typography>
+        <Typography variant={'subtitle1'}>
+          {truncateAddress ? address.substring(3, 11) : address}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
 
 export default UserItem;
