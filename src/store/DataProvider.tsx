@@ -1,10 +1,12 @@
 import React, {createContext, useContext, useState} from 'react';
-import {User} from 'src/types';
+import {Transaction, User} from 'src/types';
 import {makeUserObject} from 'src/utils';
 
 type DataProvider = {
   userList: User[];
   registerNewUser: (user: User) => void;
+  transactions: Transaction[];
+  registerTransaction: (transaction: Transaction) => void;
 };
 
 const Context = createContext<DataProvider | null>(null);
@@ -19,12 +21,17 @@ const initialUsers: User[] = [
 ].map((name) => makeUserObject(name));
 const DataProvider = ({children}: React.PropsWithChildren) => {
   const [userList, setUseList] = useState<User[]>(initialUsers);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const registerNewUser = (user: User) => {
     setUseList((prevUserList) => [user, ...prevUserList]);
   };
+
+  const registerTransaction = (transaction: Transaction) => {
+    setTransactions((prevTransaction) => [...prevTransaction, transaction]);
+  }
   return (
-    <Context.Provider value={{userList, registerNewUser}}>
+    <Context.Provider value={{userList, transactions, registerNewUser, registerTransaction}}>
       {children}
     </Context.Provider>
   );

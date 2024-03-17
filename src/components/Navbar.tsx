@@ -16,10 +16,10 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import {Link, useNavigate} from 'react-router-dom';
 import {Add} from '@mui/icons-material';
+import CreateTransactionButton from 'src/components/CreateTransactionButton';
 
 type Props = {
   window?: () => Window;
-  onPressCreateTransaction: () => void;
 };
 
 const navItems = [
@@ -85,12 +85,7 @@ const Navbar = (props: Props) => {
           <Box sx={{display: {xs: 'none', sm: 'block'}}}>
             <NavbarItems onClickItem={(_, path) => handleClickNavItem(path)} />
           </Box>
-          <Button
-            sx={{color: '#fff'}}
-            onClick={props.onPressCreateTransaction}>
-            <Add />
-            Create txn
-          </Button>
+          <CreateTransactionButton/>
         </Toolbar>
       </AppBar>
       <nav>

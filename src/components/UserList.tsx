@@ -1,7 +1,8 @@
 import React from 'react';
 import {User} from 'src/types';
-import {Box, Typography} from '@mui/material';
+import {Box, List, ListItem, Typography} from '@mui/material';
 import {Person} from '@mui/icons-material';
+import UserItem from 'src/components/UserItem';
 
 type Props = {
   list: User[];
@@ -14,18 +15,7 @@ const UserList = ({list, className}: Props) => {
       <Typography variant={'h4'} className={'text-center'}>
         User list
       </Typography>
-
-      {list.map(({name, address}) => (
-        <Box
-          key={`${name}-${address}`}
-          className={'flex items-center justify-center gap-2 border-b mt-2'}>
-          <Person className={'m-2'} />
-          <Box>
-            <Typography variant={'h6'}>{name}</Typography>
-            <Typography variant={'subtitle1'}>{address}</Typography>
-          </Box>
-        </Box>
-      ))}
+      {list.map((user) => <UserItem key={user.address} user={user}/>)}
     </Box>
   );
 };
