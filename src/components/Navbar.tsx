@@ -68,7 +68,7 @@ const Navbar = (props: Props) => {
 
   return (
     <>
-      <AppBar component={'nav'} className={'bg-black'}>
+      <AppBar component={'nav'}>
         <Toolbar className={'justify-between'}>
           <IconButton
             color="inherit"
@@ -85,7 +85,7 @@ const Navbar = (props: Props) => {
           <Box sx={{display: {xs: 'none', sm: 'block'}}}>
             <NavbarItems onClickItem={(_, path) => handleClickNavItem(path)} />
           </Box>
-          <CreateTransactionButton/>
+          <CreateTransactionButton />
         </Toolbar>
       </AppBar>
       <nav>

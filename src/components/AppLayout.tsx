@@ -1,21 +1,17 @@
-import React, {useState} from 'react';
-import {Box, CssBaseline} from '@mui/material';
+import React from 'react';
+import {CssBaseline, Grid} from '@mui/material';
 import Navbar from 'src/components/Navbar';
 import {Outlet} from 'react-router-dom';
-import CreateTransactionButton from 'src/components/CreateTransactionButton';
 
-type Props = {};
-
-const AppLayout = (props: Props) => {
+const AppLayout = () => {
   return (
-    <Box className={'pt-16'}>
+    <Grid container className={'pt-16'}>
       <CssBaseline />
       <Navbar />
-      <Box component="main">
+      <Grid component="main" xs={12}>
         <Outlet />
-      </Box>
-
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 
