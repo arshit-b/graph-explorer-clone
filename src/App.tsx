@@ -6,7 +6,7 @@ import DataProvider from 'src/store/DataProvider';
 function App() {
   return (
     <DataProvider>
-      <AppRoutes/>
+      <AppRoutes />
     </DataProvider>
   );
 }

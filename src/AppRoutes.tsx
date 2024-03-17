@@ -6,16 +6,16 @@ import Home from 'src/pages/home';
 
 type Props = {};
 const AppRoutes = (props: Props) => {
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route element={<AppLayout/>}>
-					<Route path="/" element={<Home/>} />
-					<Route path="/0x" element={<Users/>} />
-				</Route>
-			</Routes>
-		</BrowserRouter>
-	);
-}
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/0x" element={<Users />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default AppRoutes;

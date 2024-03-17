@@ -5,10 +5,7 @@ import {Add} from '@mui/icons-material';
 type Props = {};
 
 const Home = (props: Props) => {
-	return (
-		<Box>
-		</Box>
-	);
-}
+  return <Box></Box>;
+};
 
 export default Home;
