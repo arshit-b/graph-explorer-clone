@@ -2,14 +2,14 @@ import React, {createContext, useContext, useState} from 'react';
 import {Transaction, User} from 'src/types';
 import {makeTransactionObject, makeUserObject} from 'src/utils';
 
-type DataProvider = {
+type DataProviderValue = {
   userList: User[];
   registerNewUser: (user: User) => void;
   transactions: Transaction[];
   registerTransaction: (transaction: Transaction) => void;
 };
 
-const Context = createContext<DataProvider | null>(null);
+const Context = createContext<DataProviderValue | null>(null);
 
 const initialUsers: User[] = [
   'Arshit',
