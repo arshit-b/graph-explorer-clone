@@ -1,5 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
+  Box,
+  Drawer,
   Grid,
   Table,
   TableBody,
@@ -12,34 +14,56 @@ import {useData} from 'src/store/DataProvider';
 import ForceGraph from 'react-force-graph-2d';
 import {User} from 'src/types';
 import UserItem from 'src/components/UserItem';
+import Navbar from 'src/components/Navbar';
+
+const TransactionList = ({transactions, userMap}) => (
+  <TableContainer>
+    <Table aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell>From</TableCell>
+          <TableCell>To</TableCell>
+          <TableCell align="right">Amount</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {transactions.map((transaction) => (
+          <TableRow key={transaction.id}>
+            <TableCell component="th" scope="row">
+              <UserItem
+                truncateAddress
+                user={userMap[transaction.fromAddress]}
+              />
+            </TableCell>
+            <TableCell>
+              <UserItem
+                truncateAddress
+                user={userMap[transaction.toAddress]}
+              />
+            </TableCell>
+            <TableCell align="right">{transaction.amount}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
 
 const Home = () => {
   const {transactions, userList} = useData();
+
+  const [showTransactionDrawer, setShowTransactionDrawer] =
+    React.useState(false);
+
+  const [isTransactionDrawerClosing, setIsTransactionDrawerClosing] =
+    React.useState(false);
+
+  const [showUserListDrawer, setShowUserListDrawer] = useState(false);
 
   const [windowDimension, setWindowDimension] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const graph = useMemo(
-    () => ({
-      nodes: userList.map((user) => ({...user, id: user.address})),
-      links: transactions.map((transaction) => {
-        return {
-          source: transaction.fromAddress,
-          target: transaction.toAddress,
-          ...transaction,
-        };
-      }),
-    }),
-    [userList, transactions],
-  );
-
-  const useIdMap = useMemo(() => {
-    return userList.reduce<{[address: string]: User}>(
-      (result, user) => ({...result, [user.address]: user}),
-      {},
-    );
-  }, [userList]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,44 +80,95 @@ const Home = () => {
     };
   }, []);
 
-  const graphWidth = windowDimension.width * 0.67;
+  const graph = useMemo(
+    () => ({
+      nodes: userList.map((user) => ({...user, id: user.address})),
+      links: transactions.map((transaction) => {
+        return {
+          source: transaction.fromAddress,
+          target: transaction.toAddress,
+          ...transaction,
+        };
+      }),
+    }),
+    [userList, transactions],
+  );
+
+  const userMap = useMemo(() => {
+    return userList.reduce<{[address: string]: User}>(
+      (result, user) => ({...result, [user.address]: user}),
+      {},
+    );
+  }, [userList]);
+
+  const handleToggleUserListDrawer = () => {
+    setShowUserListDrawer((prevShowUserListDrawer) => !prevShowUserListDrawer);
+  };
+
+  const handleTransactionsDrawerClose = () => {
+    setIsTransactionDrawerClosing(true);
+    setShowTransactionDrawer(false);
+  };
+
+  const handleTransactionsDrawerTransitionEnd = () => {
+    setIsTransactionDrawerClosing(false);
+  };
+
+  const handleTransactionsDrawerToggle = () => {
+    if (!isTransactionDrawerClosing) {
+      setShowTransactionDrawer(!showTransactionDrawer);
+    }
+  };
+
+  const drawerWidth = 400;
+
+  const graphWidth =
+    windowDimension.width < 600
+      ? windowDimension.width
+      : windowDimension.width - drawerWidth;
+
   const graphHeight = windowDimension.height - 64;
 
+  const container =
+    window !== undefined ? () => window.document.body : undefined;
+
   return (
-    <Grid container height={'100%'} width={'100%'} overflow={'hidden'}>
-      <Grid item xs={4} height={'inherit'} className={'flex overflow-y-auto'}>
-        <TableContainer>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell align="right">Amount</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {transactions.map((transaction) => (
-                <TableRow key={transaction.id}>
-                  <TableCell component="th" scope="row">
-                    <UserItem
-                      truncateAddress
-                      user={useIdMap[transaction.fromAddress]}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <UserItem
-                      truncateAddress
-                      user={useIdMap[transaction.toAddress]}
-                    />
-                  </TableCell>
-                  <TableCell align="right">{transaction.amount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-      <Grid height={'inherit'} item xs={8}>
+    <Box>
+      <Navbar
+        onPressMenu={handleTransactionsDrawerToggle}
+        onPressUserList={handleToggleUserListDrawer}
+      />
+      <Box sx={{width: {sm: drawerWidth}, flexShrink: {sm: 0}}}>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={showTransactionDrawer}
+          onTransitionEnd={handleTransactionsDrawerTransitionEnd}
+          onClose={handleTransactionsDrawerClose}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            display: {xs: 'block', sm: 'none'},
+          }}>
+          <TransactionList userMap={userMap} transactions={transactions} />
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: {xs: 'none', sm: 'block'},
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              height: windowDimension.height - 64,
+              mt: 8,
+            },
+          }}
+          open>
+          <TransactionList userMap={userMap} transactions={transactions} />
+        </Drawer>
+      </Box>
+      <Box sx={{display: 'flex', mt: 8, justifyContent: {sm: 'flex-end'}}}>
         <ForceGraph
           width={graphWidth}
           height={graphHeight}
@@ -125,8 +200,17 @@ const Home = () => {
             node.__bckgDimensions = [textWidth + fontSize, 2 * fontSize];
           }}
         />
-      </Grid>
-    </Grid>
+      </Box>
+
+      <Drawer
+        anchor={'right'}
+        open={showUserListDrawer}
+        onClose={() => setShowUserListDrawer(false)}>
+        {userList.map((user) => (
+          <UserItem key={user.address} user={user} />
+        ))}
+      </Drawer>
+    </Box>
   );
 };
 

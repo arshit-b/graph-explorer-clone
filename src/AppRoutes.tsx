@@ -9,10 +9,8 @@ const AppRoutes = (props: Props) => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/0x" element={<Users />} />
-        </Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<Users />} />
       </Routes>
     </BrowserRouter>
   );

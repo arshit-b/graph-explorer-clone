@@ -5,19 +5,10 @@ import {Outlet} from 'react-router-dom';
 
 const AppLayout = () => {
   return (
-    <Grid container height={'100vh'} display={'flex'} width={'100vw'}>
+    <Box>
       <CssBaseline />
-
-      <Navbar />
-      <Grid
-        height={'calc(100% - 64px)'}
-        width={'100%'}
-        overflow={'hidden'}
-        component="main"
-        xs={12}>
-        <Outlet />
-      </Grid>
-    </Grid>
+      <Outlet />
+    </Box>
   );
 };
 
