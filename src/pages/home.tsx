@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Box,
   Divider,
@@ -56,6 +56,8 @@ const TransactionList = ({transactions, userMap}) => (
 
 const Home = () => {
   const {transactions, userList} = useData();
+
+  const graphRef = useRef();
 
   const [showTransactionDrawer, setShowTransactionDrawer] =
     React.useState(false);
@@ -189,11 +191,17 @@ const Home = () => {
       </Box>
       <Box sx={{display: 'flex', mt: 8, justifyContent: {sm: 'flex-end'}}}>
         <ForceGraph
+          ref={graphRef}
+          nodeAutoColorBy="group"
           width={graphWidth}
           height={graphHeight}
           graphData={graph}
           nodeRelSize={8}
+          linkWidth={2}
           cooldownTicks={100}
+          linkDirectionalArrowLength={3}
+          linkDirectionalArrowRelPos={1}
+          linkCurvature={0.1}
           nodeCanvasObject={(node, ctx, globalScale) => {
             ctx.beginPath();
             ctx.arc(node.x, node.y, 8, 0, 2 * Math.PI, false);
