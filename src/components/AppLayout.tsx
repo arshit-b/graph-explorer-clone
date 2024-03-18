@@ -12,6 +12,7 @@ const AppLayout = () => {
       <Grid
         height={'calc(100% - 64px)'}
         width={'100%'}
+        overflow={'hidden'}
         component="main"
         xs={12}>
         <Outlet />

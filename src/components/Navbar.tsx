@@ -17,6 +17,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {Link, useNavigate} from 'react-router-dom';
 import {Add} from '@mui/icons-material';
 import CreateTransactionButton from 'src/components/CreateTransactionButton';
+import CreateUserButton from 'src/components/CreateUserButton';
 
 type Props = {
   window?: () => Window;
@@ -69,7 +70,7 @@ const Navbar = (props: Props) => {
   return (
     <>
       <AppBar position={'relative'} component={'nav'}>
-        <Toolbar className={'justify-between'}>
+        <Toolbar className={'gap-4'}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -86,6 +87,7 @@ const Navbar = (props: Props) => {
             <NavbarItems onClickItem={(_, path) => handleClickNavItem(path)} />
           </Box>
           <CreateTransactionButton />
+          <CreateUserButton />
         </Toolbar>
       </AppBar>
       <nav>

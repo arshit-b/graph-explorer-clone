@@ -6,12 +6,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Input,
   InputAdornment,
   Typography,
 } from '@mui/material';
 
-import {Add} from '@mui/icons-material';
+import {Payments} from '@mui/icons-material';
 import {useData} from 'src/store/DataProvider';
 import SelectUser from 'src/components/SelectUser';
 import {User} from 'src/types';
@@ -71,10 +72,9 @@ const CreateTransactionButton = () => {
   };
   return (
     <div>
-      <Button sx={{color: '#fff'}} onClick={handleClickOpen}>
-        <Add />
-        Transaction
-      </Button>
+      <IconButton sx={{color: '#fff'}} onClick={handleClickOpen}>
+        <Payments />
+      </IconButton>
       <Dialog
         keepMounted={false}
         disableEscapeKeyDown

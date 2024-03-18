@@ -1,19 +1,23 @@
 import React from 'react';
-import {Box} from '@mui/material';
-import CreateUser from 'src/components/CreateUser';
-import {User} from 'src/types';
-import UserList from 'src/components/UserList';
+import {Box, Typography} from '@mui/material';
 import {useData} from 'src/store/DataProvider';
+import UserItem from 'src/components/UserItem';
 
 const Users = () => {
   const {userList, registerNewUser} = useData();
-  const handleCreateUser = (user: User) => {
-    registerNewUser(user);
-  };
+
   return (
-    <Box className={'py-4'}>
-      <CreateUser onSubmit={handleCreateUser} />
-      <UserList className={'mt-6'} list={userList} />
+    <Box height={'100%'} className={'overflow-y-scroll py-4'}>
+      <Box className={'flex items-center justify-center'}>
+        <Typography variant={'h4'} className={'text-center'}>
+          Users
+        </Typography>
+      </Box>
+      <Box className={'flex flex-col flex-grow m-auto w-fit'}>
+        {userList.map((user) => (
+          <UserItem key={user.address} user={user} />
+        ))}
+      </Box>
     </Box>
   );
 };
