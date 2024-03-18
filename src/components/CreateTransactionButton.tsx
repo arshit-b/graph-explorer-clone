@@ -1,14 +1,13 @@
 import React, {useMemo, useState} from 'react';
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   Input,
   InputAdornment,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
@@ -72,9 +71,11 @@ const CreateTransactionButton = () => {
   };
   return (
     <div>
-      <IconButton sx={{color: '#fff'}} onClick={handleClickOpen}>
-        <Payments />
-      </IconButton>
+      <Tooltip title="Create transaction">
+        <IconButton sx={{color: '#fff'}} onClick={handleClickOpen}>
+          <Payments />
+        </IconButton>
+      </Tooltip>
       <Dialog
         maxWidth={'xs'}
         fullWidth

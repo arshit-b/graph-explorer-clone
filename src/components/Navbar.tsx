@@ -5,6 +5,7 @@ import {
   Box,
   IconButton,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -51,9 +52,11 @@ const Navbar = (props: Props) => {
         <Box className={'flex gap-4'}>
           <CreateTransactionButton />
           <CreateUserButton />
-          <IconButton color="inherit" edge="start" onClick={onPressUserList}>
-            <Group />
-          </IconButton>
+          <Tooltip title="View all user">
+            <IconButton color="inherit" edge="start" onClick={onPressUserList}>
+              <Group />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>

@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {PersonAdd} from '@mui/icons-material';
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   IconButton,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import {useData} from 'src/store/DataProvider';
@@ -37,9 +37,11 @@ const CreateUserButton = () => {
   };
   return (
     <>
-      <IconButton sx={{color: '#fff'}} onClick={handleClickOpen}>
-        <PersonAdd />
-      </IconButton>
+      <Tooltip title="Create user">
+        <IconButton sx={{color: '#fff'}} onClick={handleClickOpen}>
+          <PersonAdd />
+        </IconButton>
+      </Tooltip>
       <Dialog
         keepMounted={false}
         maxWidth={'xs'}
