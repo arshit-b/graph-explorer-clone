@@ -2,6 +2,7 @@ import React from 'react';
 import {
   AppBar,
   AppBarProps,
+  Box,
   IconButton,
   Toolbar,
   Typography,
@@ -19,7 +20,7 @@ type Props = {
 } & AppBarProps;
 
 const NavLogo = ({onClick, sx = {}}) => (
-  <Typography onClick={onClick} variant="h5" component="div" sx={sx}>
+  <Typography onClick={onClick} variant="h6" component="div" sx={sx}>
     0xPPL
   </Typography>
 );
@@ -34,7 +35,7 @@ const Navbar = (props: Props) => {
   };
   return (
     <AppBar position={'fixed'} {...restProps}>
-      <Toolbar className={'gap-4'}>
+      <Toolbar className={'gap-4 justify-between'}>
         <IconButton
           color="inherit"
           aria-label="open drawer"
@@ -47,11 +48,13 @@ const Navbar = (props: Props) => {
           onClick={() => handleClickNavItem('/')}
           sx={{cursor: 'pointer', display: {xs: 'none', sm: 'block'}}}
         />
-        <IconButton color="inherit" edge="start" onClick={onPressUserList}>
-          <Group />
-        </IconButton>
-        <CreateTransactionButton />
-        <CreateUserButton />
+        <Box className={'flex gap-4'}>
+          <CreateTransactionButton />
+          <CreateUserButton />
+          <IconButton color="inherit" edge="start" onClick={onPressUserList}>
+            <Group />
+          </IconButton>
+        </Box>
       </Toolbar>
     </AppBar>
   );

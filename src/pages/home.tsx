@@ -1,20 +1,25 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   Box,
+  Divider,
   Drawer,
-  Grid,
+  IconButton,
+  List,
+  ListItem,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import {useData} from 'src/store/DataProvider';
 import ForceGraph from 'react-force-graph-2d';
 import {User} from 'src/types';
 import UserItem from 'src/components/UserItem';
 import Navbar from 'src/components/Navbar';
+import {ArrowBack} from '@mui/icons-material';
 
 const TransactionList = ({transactions, userMap}) => (
   <TableContainer>
@@ -151,6 +156,20 @@ const Home = () => {
           sx={{
             display: {xs: 'block', sm: 'none'},
           }}>
+          <Box className={'flex items-center my-2'}>
+            <IconButton
+              className={'w-fit'}
+              onClick={handleTransactionsDrawerClose}>
+              <ArrowBack />
+            </IconButton>
+            <Typography
+              flex={1}
+              fontWeight={'bold'}
+              textAlign={'center'}
+              variant={'h6'}>
+              All Transactions
+            </Typography>
+          </Box>
           <TransactionList userMap={userMap} transactions={transactions} />
         </Drawer>
         <Drawer
@@ -206,9 +225,31 @@ const Home = () => {
         anchor={'right'}
         open={showUserListDrawer}
         onClose={() => setShowUserListDrawer(false)}>
-        {userList.map((user) => (
-          <UserItem key={user.address} user={user} />
-        ))}
+        <Box className={'flex items-center my-2'}>
+          <Typography
+            flex={1}
+            fontWeight={'bold'}
+            textAlign={'center'}
+            variant={'h6'}>
+            All Users
+          </Typography>
+          <IconButton
+            className={'w-fit rotate-180'}
+            onClick={handleToggleUserListDrawer}>
+            <ArrowBack />
+          </IconButton>
+        </Box>
+        <List>
+          {userList.map((user) => (
+            <>
+              <Divider />
+              <ListItem>
+                <UserItem key={user.address} user={user} />
+              </ListItem>
+            </>
+          ))}
+          <Divider />
+        </List>
       </Drawer>
     </Box>
   );
