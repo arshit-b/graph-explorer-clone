@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import {useNavigate} from 'react-router-dom';
 import {Group} from '@mui/icons-material';
 import CreateTransactionButton from 'src/components/CreateTransactionButton';
 import CreateUserButton from 'src/components/CreateUserButton';
@@ -20,20 +19,9 @@ type Props = {
   onPressUserList: () => void;
 } & AppBarProps;
 
-const NavLogo = ({onClick, sx = {}}) => (
-  <Typography onClick={onClick} variant="h6" component="div" sx={sx}>
-    0xPPL
-  </Typography>
-);
-
 const Navbar = (props: Props) => {
   const {onPressMenu, onPressUserList, ...restProps} = props;
 
-  const navigate = useNavigate();
-
-  const handleClickNavItem = (path: string) => {
-    navigate(path);
-  };
   return (
     <AppBar position={'fixed'} {...restProps}>
       <Toolbar className={'gap-4 justify-between'}>
@@ -45,10 +33,12 @@ const Navbar = (props: Props) => {
           sx={{mr: 2, display: {sm: 'none'}}}>
           <MenuIcon />
         </IconButton>
-        <NavLogo
-          onClick={() => handleClickNavItem('/')}
-          sx={{cursor: 'pointer', display: {xs: 'none', sm: 'block'}}}
-        />
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{display: {xs: 'none', sm: 'block'}}}>
+          0xPPL
+        </Typography>
         <Box className={'flex gap-4'}>
           <CreateTransactionButton />
           <CreateUserButton />
