@@ -76,43 +76,49 @@ const CreateTransactionButton = () => {
         <Payments />
       </IconButton>
       <Dialog
+        maxWidth={'xs'}
+        fullWidth
         keepMounted={false}
         disableEscapeKeyDown
         open={open}
         onClose={handleClose}>
-        <DialogTitle>Create transaction</DialogTitle>
-        <DialogContent className={'md:min-w-80'}>
-          <Box component="form">
-            <SelectUser
-              className={'mt-4'}
-              value={fromUser}
-              onChange={handleChangeFromUser}
-              options={fromUserOptions}
-              label={'From'}
-            />
-            <SelectUser
-              className={'mt-4'}
-              value={toUser}
-              onChange={handleChangeToUser}
-              options={toUserOptions}
-              label={'To'}
-            />
-            <Input
-              type={'number'}
-              value={amount ? amount.toString() : ''}
-              onChange={(event) => {
-                const value = event.target.value;
-                setAmount(Math.abs(Number(value)));
-              }}
-              slotProps={{root: {className: 'p-2 mt-4'}, input: {min: 1}}}
-              placeholder={'Amount'}
-              startAdornment={
-                <InputAdornment className={'mr-2'} position={'start'}>
-                  <Typography className={'text-black'}>$</Typography>
-                </InputAdornment>
-              }
-            />
-          </Box>
+        <DialogContent>
+          <Typography
+            mb={2}
+            variant={'h6'}
+            textAlign={'center'}
+            fontWeight={'bold'}>
+            Create transaction
+          </Typography>
+          <SelectUser
+            className={'mt-2'}
+            value={fromUser}
+            onChange={handleChangeFromUser}
+            options={fromUserOptions}
+            label={'From'}
+          />
+          <SelectUser
+            className={'mt-4'}
+            value={toUser}
+            onChange={handleChangeToUser}
+            options={toUserOptions}
+            label={'To'}
+          />
+          <Input
+            type={'number'}
+            value={amount ? amount.toString() : ''}
+            onChange={(event) => {
+              const value = event.target.value;
+              setAmount(Math.abs(Number(value)));
+            }}
+            slotProps={{root: {className: 'p-2 mt-4'}, input: {min: 1}}}
+            placeholder={'Amount'}
+            startAdornment={
+              <InputAdornment className={'mr-2'} position={'start'}>
+                <Typography className={'text-black'}>$</Typography>
+              </InputAdornment>
+            }
+          />
         </DialogContent>
         <DialogActions onClick={handleClose}>
           <Button onClick={handleClose}>Cancel</Button>

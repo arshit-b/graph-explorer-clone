@@ -15,7 +15,6 @@ const SelectUser = <T extends User>({
 }: Props<T>) => {
   return (
     <Autocomplete
-      className={'min-w-80'}
       value={value}
       isOptionEqualToValue={(option, value) => {
         if (typeof option === 'string' || value == null) return false;

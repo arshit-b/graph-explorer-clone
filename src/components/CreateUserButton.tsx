@@ -40,9 +40,18 @@ const CreateUserButton = () => {
       <IconButton sx={{color: '#fff'}} onClick={handleClickOpen}>
         <PersonAdd />
       </IconButton>
-      <Dialog className={'p-4'} open={open} onClose={handleClose}>
-        <DialogContent className={'md:min-w-80'}>
-          <Typography variant="h5" component="h2" gutterBottom>
+      <Dialog
+        keepMounted={false}
+        maxWidth={'xs'}
+        fullWidth
+        open={open}
+        onClose={handleClose}>
+        <DialogContent>
+          <Typography
+            mb={2}
+            variant={'h6'}
+            textAlign={'center'}
+            fontWeight={'bold'}>
             Create new user
           </Typography>
           <TextField

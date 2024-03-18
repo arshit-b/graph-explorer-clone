@@ -17,8 +17,8 @@ const UserItem = ({user, truncateAddress, ...restProps}: Props) => {
       {...restProps}>
       <Person className={'mr-2'} />
       <Box>
-        <Typography variant={'h6'}>{name}</Typography>
-        <Typography variant={'subtitle1'}>
+        <Typography>{name}</Typography>
+        <Typography>
           {truncateAddress ? address.substring(3, 11) : address}
         </Typography>
       </Box>
