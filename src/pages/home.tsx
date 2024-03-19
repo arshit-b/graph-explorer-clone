@@ -20,7 +20,6 @@ import {Transaction, User} from 'src/types';
 import UserItem from 'src/components/UserItem';
 import Navbar from 'src/components/Navbar';
 import {ArrowBack} from '@mui/icons-material';
-import * as trace_events from 'trace_events';
 
 const TransactionList = ({
   transactions,
