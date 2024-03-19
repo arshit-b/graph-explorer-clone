@@ -61,9 +61,10 @@ const TransactionList = ({
 );
 
 const Home = () => {
-  const {transactions, userList} = useData();
+  const [isLoading, setIsLoading] = useState(true);
+  const {transactions, userList, cachedImages, cacheImage} = useData();
 
-  const graphRef = useRef();
+  const graphRef = useRef<any>();
 
   const [showTransactionDrawer, setShowTransactionDrawer] =
     React.useState(false);
@@ -92,6 +93,43 @@ const Home = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const uncachedImageUris = userList
+      .map((user) => user.imageUri)
+      .filter((uri) => {
+        return uri != null && cachedImages[uri] == null;
+      });
+    if (uncachedImageUris.length === 0) {
+      setIsLoading(false);
+      return;
+    }
+    const uncachedImagePromises = uncachedImageUris.map((uri) => {
+      return new Promise<{uri: string; image: HTMLImageElement}>(
+        (resolve, reject) => {
+          const image = new Image();
+          image.loading = 'eager';
+          image.onload = () => resolve({uri, image});
+          image.src = uri;
+          setTimeout(() => reject(new Error('Image load timeout')), 2000);
+        },
+      );
+    });
+
+    Promise.allSettled(uncachedImagePromises)
+      .then((responses) => {
+        responses.forEach((response) => {
+          if (response.status === 'fulfilled') {
+            const {uri, image} = response.value;
+            cacheImage(uri, image);
+          }
+        });
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, [userList]);
 
   const graph = useMemo(
     () => ({
@@ -195,45 +233,61 @@ const Home = () => {
           <TransactionList userMap={userMap} transactions={transactions} />
         </Drawer>
       </Box>
-      <Box sx={{display: 'flex', mt: 8, justifyContent: {sm: 'flex-end'}}}>
-        <ForceGraph
-          ref={graphRef}
-          nodeAutoColorBy="group"
-          width={graphWidth}
-          height={graphHeight}
-          graphData={graph}
-          nodeRelSize={8}
-          linkWidth={2}
-          cooldownTicks={100}
-          linkDirectionalArrowLength={3}
-          linkDirectionalArrowRelPos={1}
-          linkCurvature={0.1}
-          nodeCanvasObject={(node, ctx, globalScale) => {
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, 8, 0, 2 * Math.PI, false);
-            ctx.fillStyle = '#000000';
-            ctx.fill();
-            ctx.closePath();
+      {!isLoading && (
+        <Box sx={{display: 'flex', mt: 8, justifyContent: {sm: 'flex-end'}}}>
+          <ForceGraph
+            ref={graphRef}
+            nodeAutoColorBy="group"
+            width={graphWidth}
+            height={graphHeight}
+            graphData={graph}
+            nodeRelSize={8}
+            linkWidth={2}
+            cooldownTicks={100}
+            onEngineStop={() => graphRef.current?.zoomToFit?.(400)}
+            linkDirectionalArrowLength={3}
+            linkDirectionalArrowRelPos={1}
+            linkCurvature={0.1}
+            nodeCanvasObject={(node, ctx, globalScale) => {
+              const nodeSize = 8;
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false);
+              ctx.fillStyle = '#4C4C4C';
+              ctx.fill();
+              ctx.closePath();
 
-            ctx.beginPath();
-            ctx.fillStyle = 'white';
-            ctx.arc(node.x, node.y, 7, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
+              ctx.beginPath();
+              ctx.fillStyle = 'white';
+              ctx.arc(node.x, node.y, nodeSize - 0.5, 0, 2 * Math.PI, false);
+              ctx.fill();
+              ctx.closePath();
 
-            const name = node.name.substring(0, 2).toUpperCase();
-            const fontSize = 6;
-            const textWidth = ctx.measureText(name).width;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.font = `${fontSize}px Arial`;
-            ctx.fillStyle = '#000000';
-            ctx.fillText(name.substring(0, 2).toUpperCase(), node.x, node.y);
+              const drawImage = (image: HTMLImageElement) => {
+                ctx.save();
+                ctx.beginPath();
+                ctx.createImageData(nodeSize, nodeSize);
+                ctx.arc(node.x, node.y, nodeSize - 1.5, 0, 2 * Math.PI, false);
+                ctx.clip();
+                ctx.drawImage(
+                  image,
+                  node.x - nodeSize / 2 - 3,
+                  node.y - nodeSize / 2 - 3,
+                  nodeSize + 6,
+                  nodeSize + 6,
+                );
+                ctx.closePath();
+              };
 
-            node.__bckgDimensions = [textWidth + fontSize, 2 * fontSize];
-          }}
-        />
-      </Box>
+              const cachedImage = cachedImages[node.imageUri];
+
+              if (cachedImage) {
+                drawImage(cachedImage);
+              }
+              node.__bckgDimensions = [nodeSize, nodeSize];
+            }}
+          />
+        </Box>
+      )}
 
       <Drawer
         anchor={'right'}
@@ -255,12 +309,12 @@ const Home = () => {
         </Box>
         <List>
           {userList.map((user) => (
-            <>
+            <React.Fragment key={user.address}>
               <Divider />
               <ListItem>
                 <UserItem key={user.address} user={user} />
               </ListItem>
-            </>
+            </React.Fragment>
           ))}
           <Divider />
         </List>

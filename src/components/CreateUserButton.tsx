@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import {useData} from 'src/store/DataProvider';
-import {makeUserObject} from 'src/utils';
+import {getRandomImageUri, makeUserObject} from 'src/utils';
 
 const CreateUserButton = () => {
   const {registerNewUser} = useData();
@@ -22,8 +22,9 @@ const CreateUserButton = () => {
     setUserName(e.target.value);
   };
   const [open, setOpen] = React.useState(false);
-  const handleCreateUser = () => {
-    const user = makeUserObject(userName);
+  const handleCreateUser = async () => {
+    const imageUri = await getRandomImageUri();
+    const user = makeUserObject(userName, imageUri);
     registerNewUser(user);
     setUserName('');
   };
