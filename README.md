@@ -4,6 +4,16 @@ Took inspiration from [0xPPL](https://0xppl.com/) explore graph page.
 
 Checkout: [Website](https://master--0xppl-graph-explorer.netlify.app/)
 
+### Added features
+- Create user
+- Make payment between 2 user.
+- Responsive UI
+
+### Upcoming features
+- Apply filters on users
+- Select transactions link in graph
+- Dark theme
+
 ## Available Scripts
 
 In the project directory, you can run:
