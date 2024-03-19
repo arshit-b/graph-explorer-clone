@@ -16,12 +16,18 @@ import {
 } from '@mui/material';
 import {useData} from 'src/store/DataProvider';
 import ForceGraph from 'react-force-graph-2d';
-import {User} from 'src/types';
+import {Transaction, User} from 'src/types';
 import UserItem from 'src/components/UserItem';
 import Navbar from 'src/components/Navbar';
 import {ArrowBack} from '@mui/icons-material';
 
-const TransactionList = ({transactions, userMap}) => (
+const TransactionList = ({
+  transactions,
+  userMap,
+}: {
+  transactions: Transaction[];
+  userMap: {[id: string]: User};
+}) => (
   <TableContainer>
     <Table aria-label="simple table">
       <TableHead>
@@ -37,13 +43,13 @@ const TransactionList = ({transactions, userMap}) => (
             <TableCell component="th" scope="row">
               <UserItem
                 truncateAddress
-                user={userMap[transaction.fromAddress]}
+                user={userMap[transaction.sourceAddress]}
               />
             </TableCell>
             <TableCell>
               <UserItem
                 truncateAddress
-                user={userMap[transaction.toAddress]}
+                user={userMap[transaction.targetAddress]}
               />
             </TableCell>
             <TableCell align="right">{transaction.amount}</TableCell>
@@ -92,8 +98,8 @@ const Home = () => {
       nodes: userList.map((user) => ({...user, id: user.address})),
       links: transactions.map((transaction) => {
         return {
-          source: transaction.fromAddress,
-          target: transaction.toAddress,
+          source: transaction.sourceAddress,
+          target: transaction.targetAddress,
           ...transaction,
         };
       }),

@@ -3,11 +3,10 @@ export type User = {
   address: string;
 };
 
-
 export type Transaction = {
   id: string;
-  fromAddress: string;
-  toAddress: string;
+  sourceAddress: string;
+  targetAddress: string;
   amount: number;
   createdAt: number;
-}
+};

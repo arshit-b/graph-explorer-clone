@@ -17,8 +17,8 @@ export const makeTransactionObject = (
   const id = uuidv4();
   return {
     id,
-    fromAddress,
-    toAddress,
+    sourceAddress: fromAddress,
+    targetAddress: toAddress,
     amount,
     createdAt: new Date().getTime(),
   };
