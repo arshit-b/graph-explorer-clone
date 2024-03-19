@@ -140,7 +140,7 @@ const Home = () => {
       .catch(() => {
         setIsLoading(false);
       });
-  }, [userList]);
+  }, [userList, cacheImage, cachedImages]);
 
   const graph = useMemo(
     () => ({
@@ -332,7 +332,7 @@ const Home = () => {
               }
               return '#A5A5A5';
             }}
-            nodeCanvasObject={(node, ctx, globalScale) => {
+            nodeCanvasObject={(node, ctx) => {
               const isSelectedNode =
                 node.address === selectedUserAddress ||
                 [

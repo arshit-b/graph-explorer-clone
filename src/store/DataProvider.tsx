@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useCallback, useContext, useState} from 'react';
 import {Transaction, User} from 'src/types';
 import {makeTransactionObject, makeUserObject} from 'src/utils';
 
@@ -107,22 +107,28 @@ const cachedImages: {
   [uri: string]: HTMLImageElement;
 } = {};
 
+const cacheImage = (uri: string, image: HTMLImageElement) => {
+  cachedImages[uri] = image;
+};
+
 const DataProvider = ({children}: React.PropsWithChildren) => {
   const [userList, setUseList] = useState<User[]>(initialUsers);
   const [transactions, setTransactions] =
     useState<Transaction[]>(initialTransactions);
 
-  const registerNewUser = (user: User) => {
-    setUseList((prevUserList) => [user, ...prevUserList]);
-  };
+  const registerNewUser = useCallback(
+    (user: User) => {
+      setUseList((prevUserList) => [user, ...prevUserList]);
+    },
+    [setUseList],
+  );
 
-  const cacheImage = (uri: string, image: HTMLImageElement) => {
-    cachedImages[uri] = image;
-  };
-
-  const registerTransaction = (transaction: Transaction) => {
-    setTransactions((prevTransaction) => [...prevTransaction, transaction]);
-  };
+  const registerTransaction = useCallback(
+    (transaction: Transaction) => {
+      setTransactions((prevTransaction) => [...prevTransaction, transaction]);
+    },
+    [setTransactions],
+  );
   return (
     <Context.Provider
       value={{
