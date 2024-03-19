@@ -46,17 +46,61 @@ const initialUsers: User[] = [
     imageUri:
       'https://images.unsplash.com/photo-1708247899914-db888e0ce29a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=100&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxMDg2MzQxMw&ixlib=rb-4.0.3&q=80&w=100',
   },
+  {
+    name: 'Praveen',
+    imageUri:
+      'https://images.unsplash.com/photo-1707833558984-3293e794031c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=100&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxMDg3NzUyOQ&ixlib=rb-4.0.3&q=80&w=100',
+  },
+  {
+    name: 'Karan',
+    imageUri:
+      'https://images.unsplash.com/photo-1709920680220-8ee257262056?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=100&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxMDg3NzQ1Nw&ixlib=rb-4.0.3&q=80&w=100',
+  },
+  {
+    name: 'Dhruv',
+    imageUri:
+      'https://images.unsplash.com/photo-1709423377982-fbe2169e5b67?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=100&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxMDg3NzQyMQ&ixlib=rb-4.0.3&q=80&w=100',
+  },
 ].map(({name, imageUri}) => makeUserObject(name, imageUri));
 
 const initialTransactions = [
-  makeTransactionObject(initialUsers[1].address, initialUsers[0].address, 233),
-  makeTransactionObject(initialUsers[2].address, initialUsers[0].address, 233),
-  makeTransactionObject(initialUsers[2].address, initialUsers[1].address, 233),
-  makeTransactionObject(initialUsers[3].address, initialUsers[0].address, 233),
-  makeTransactionObject(initialUsers[3].address, initialUsers[1].address, 233),
-  makeTransactionObject(initialUsers[3].address, initialUsers[2].address, 233),
-  makeTransactionObject(initialUsers[4].address, initialUsers[1].address, 233),
-  makeTransactionObject(initialUsers[5].address, initialUsers[2].address, 233),
+  makeTransactionObject(initialUsers[0].address, initialUsers[6].address, 923),
+  makeTransactionObject(
+    initialUsers[0].address,
+    initialUsers[7].address,
+    9423,
+  ),
+  makeTransactionObject(
+    initialUsers[0].address,
+    initialUsers[8].address,
+    9423,
+  ),
+  makeTransactionObject(
+    initialUsers[1].address,
+    initialUsers[0].address,
+    3423,
+  ),
+  makeTransactionObject(
+    initialUsers[2].address,
+    initialUsers[1].address,
+    23432,
+  ),
+  makeTransactionObject(initialUsers[3].address, initialUsers[1].address, 434),
+  makeTransactionObject(
+    initialUsers[3].address,
+    initialUsers[2].address,
+    23343,
+  ),
+  makeTransactionObject(
+    initialUsers[4].address,
+    initialUsers[1].address,
+    232433,
+  ),
+  makeTransactionObject(
+    initialUsers[5].address,
+    initialUsers[2].address,
+    25633,
+  ),
 ];
 
 const cachedImages: {

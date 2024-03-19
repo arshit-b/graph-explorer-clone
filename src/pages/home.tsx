@@ -65,7 +65,16 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const {transactions, userList, cachedImages, cacheImage} = useData();
 
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUserAddress, setSelectedUserAddress] = useState<
+    string | null
+  >(null);
+  const [selectedLink, setSelectedLink] = useState<{
+    targetAddress: null | string;
+    sourceAddress: null | string;
+  }>({
+    targetAddress: null,
+    sourceAddress: null,
+  });
 
   const graphRef = useRef<any>();
 
@@ -149,15 +158,24 @@ const Home = () => {
   );
 
   const drawerTransactions = useMemo(() => {
-    if (!selectedUser) {
+    if (
+      !selectedUserAddress &&
+      !selectedLink.sourceAddress &&
+      !selectedLink.targetAddress
+    ) {
       return transactions;
     }
-    return transactions.filter((transaction) =>
-      [transaction.targetAddress, transaction.sourceAddress].includes(
-        selectedUser,
-      ),
+    return transactions.filter(
+      (transaction) =>
+        [transaction.targetAddress, transaction.sourceAddress].includes(
+          selectedUserAddress,
+        ) ||
+        (transaction.sourceAddress === selectedLink.sourceAddress &&
+          transaction.targetAddress === selectedLink.targetAddress) ||
+        (transaction.sourceAddress === selectedLink.targetAddress &&
+          transaction.targetAddress === selectedLink.sourceAddress),
     );
-  }, [transactions, selectedUser]);
+  }, [transactions, selectedUserAddress, selectedLink]);
 
   const userMap = useMemo(() => {
     return userList.reduce<{[address: string]: User}>(
@@ -183,6 +201,13 @@ const Home = () => {
     if (!isTransactionDrawerClosing) {
       setShowTransactionDrawer(!showTransactionDrawer);
     }
+  };
+
+  const initSelectedLink = () => {
+    setSelectedLink({
+      targetAddress: null,
+      sourceAddress: null,
+    });
   };
 
   const drawerWidth = 400;
@@ -264,15 +289,27 @@ const Home = () => {
             nodeRelSize={8}
             linkWidth={2}
             cooldownTicks={100}
-            onEngineStop={() => graphRef.current?.zoomToFit?.(400)}
+            onEngineStop={() => graphRef.current?.zoomToFit?.(400, 30)}
             linkDirectionalArrowRelPos={1}
             linkCurvature={0.1}
             onNodeClick={(node) => {
-              if (selectedUser === node.address) {
-                setSelectedUser(null);
+              initSelectedLink();
+              if (selectedUserAddress === node.address) {
+                setSelectedUserAddress(null);
               } else {
-                setSelectedUser(node.address);
+                setSelectedUserAddress(node.address);
               }
+            }}
+            onLinkClick={(link) => {
+              setSelectedUserAddress(null);
+              if (
+                link.sourceAddress === selectedLink.sourceAddress &&
+                link.targetAddress === selectedLink.targetAddress
+              ) {
+                initSelectedLink();
+                return;
+              }
+              setSelectedLink(link);
             }}
             linkLabel={(link) =>
               Intl.NumberFormat('en-US', {
@@ -283,16 +320,26 @@ const Home = () => {
               }).format(link.amount)
             }
             linkColor={(link) => {
-              if (
-                selectedUser === link.sourceAddress ||
-                selectedUser === link.targetAddress
-              ) {
+              const isLinkHighlighted =
+                [link.sourceAddress, link.targetAddress].includes(
+                  selectedUserAddress,
+                ) ||
+                (link.sourceAddress === selectedLink.sourceAddress &&
+                  link.targetAddress === selectedLink.targetAddress) ||
+                (link.sourceAddress === selectedLink.targetAddress &&
+                  link.targetAddress === selectedLink.sourceAddress);
+              if (isLinkHighlighted) {
                 return '#FF6E4A';
               }
               return '#A5A5A5';
             }}
             nodeCanvasObject={(node, ctx, globalScale) => {
-              const isSelectedNode = node.address === selectedUser;
+              const isSelectedNode =
+                node.address === selectedUserAddress ||
+                [
+                  selectedLink.sourceAddress,
+                  selectedLink.targetAddress,
+                ].includes(node.address);
               const nodeSize = isSelectedNode ? 12 : 8;
               ctx.beginPath();
               ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false);
