@@ -20,6 +20,7 @@ import {Transaction, User} from 'src/types';
 import UserItem from 'src/components/UserItem';
 import Navbar from 'src/components/Navbar';
 import {ArrowBack} from '@mui/icons-material';
+import * as trace_events from 'trace_events';
 
 const TransactionList = ({
   transactions,
@@ -63,6 +64,8 @@ const TransactionList = ({
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const {transactions, userList, cachedImages, cacheImage} = useData();
+
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const graphRef = useRef<any>();
 
@@ -145,6 +148,17 @@ const Home = () => {
     [userList, transactions],
   );
 
+  const drawerTransactions = useMemo(() => {
+    if (!selectedUser) {
+      return transactions;
+    }
+    return transactions.filter((transaction) =>
+      [transaction.targetAddress, transaction.sourceAddress].includes(
+        selectedUser,
+      ),
+    );
+  }, [transactions, selectedUser]);
+
   const userMap = useMemo(() => {
     return userList.reduce<{[address: string]: User}>(
       (result, user) => ({...result, [user.address]: user}),
@@ -216,7 +230,10 @@ const Home = () => {
               All Transactions
             </Typography>
           </Box>
-          <TransactionList userMap={userMap} transactions={transactions} />
+          <TransactionList
+            userMap={userMap}
+            transactions={drawerTransactions}
+          />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -230,7 +247,10 @@ const Home = () => {
             },
           }}
           open>
-          <TransactionList userMap={userMap} transactions={transactions} />
+          <TransactionList
+            userMap={userMap}
+            transactions={drawerTransactions}
+          />
         </Drawer>
       </Box>
       {!isLoading && (
@@ -245,20 +265,51 @@ const Home = () => {
             linkWidth={2}
             cooldownTicks={100}
             onEngineStop={() => graphRef.current?.zoomToFit?.(400)}
-            linkDirectionalArrowLength={3}
             linkDirectionalArrowRelPos={1}
             linkCurvature={0.1}
+            onNodeClick={(node) => {
+              if (selectedUser === node.address) {
+                setSelectedUser(null);
+              } else {
+                setSelectedUser(node.address);
+              }
+            }}
+            linkLabel={(link) =>
+              Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+              }).format(link.amount)
+            }
+            linkColor={(link) => {
+              if (
+                selectedUser === link.sourceAddress ||
+                selectedUser === link.targetAddress
+              ) {
+                return '#FF6E4A';
+              }
+              return '#A5A5A5';
+            }}
             nodeCanvasObject={(node, ctx, globalScale) => {
-              const nodeSize = 8;
+              const isSelectedNode = node.address === selectedUser;
+              const nodeSize = isSelectedNode ? 12 : 8;
               ctx.beginPath();
               ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false);
-              ctx.fillStyle = '#4C4C4C';
+              ctx.fillStyle = isSelectedNode ? '#FF6E4A' : '#A5A5A5';
               ctx.fill();
               ctx.closePath();
 
               ctx.beginPath();
               ctx.fillStyle = 'white';
-              ctx.arc(node.x, node.y, nodeSize - 0.5, 0, 2 * Math.PI, false);
+              ctx.arc(
+                node.x,
+                node.y,
+                nodeSize - (isSelectedNode ? 1 : 0.5),
+                0,
+                2 * Math.PI,
+                false,
+              );
               ctx.fill();
               ctx.closePath();
 
@@ -266,14 +317,21 @@ const Home = () => {
                 ctx.save();
                 ctx.beginPath();
                 ctx.createImageData(nodeSize, nodeSize);
-                ctx.arc(node.x, node.y, nodeSize - 1.5, 0, 2 * Math.PI, false);
+                ctx.arc(
+                  node.x,
+                  node.y,
+                  nodeSize - (isSelectedNode ? 2 : 1.5),
+                  0,
+                  2 * Math.PI,
+                  false,
+                );
                 ctx.clip();
                 ctx.drawImage(
                   image,
-                  node.x - nodeSize / 2 - 3,
-                  node.y - nodeSize / 2 - 3,
-                  nodeSize + 6,
-                  nodeSize + 6,
+                  node.x - nodeSize,
+                  node.y - nodeSize,
+                  2 * nodeSize,
+                  2 * nodeSize,
                 );
                 ctx.closePath();
               };
