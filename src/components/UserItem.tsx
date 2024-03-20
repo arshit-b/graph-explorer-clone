@@ -1,8 +1,6 @@
 import React from 'react';
-import {Person} from '@mui/icons-material';
 import {Box, Typography} from '@mui/material';
 import {User} from 'src/types';
-import {useData} from 'src/store/DataProvider';
 
 type Props = {
   user: User;
