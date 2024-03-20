@@ -2,6 +2,7 @@ import React from 'react';
 import {Person} from '@mui/icons-material';
 import {Box, Typography} from '@mui/material';
 import {User} from 'src/types';
+import {useData} from 'src/store/DataProvider';
 
 type Props = {
   user: User;
@@ -9,19 +10,25 @@ type Props = {
 };
 
 const UserItem = ({user, truncateAddress, ...restProps}: Props) => {
-  const {name, address} = user;
+  const {name, address, imageUri} = user;
   return (
     <Box
       key={`${name}-${address}`}
       className={'flex flex-row items-center gap-2'}
       {...restProps}>
-      <Person className={'mr-2'} />
-      <Box>
-        <Typography>{name}</Typography>
-        <Typography>
-          {truncateAddress ? address.substring(3, 11) : address}
-        </Typography>
-      </Box>
+      <>
+        <img
+          src={imageUri}
+          alt={name}
+          className={'h-8 sm:h-10 rounded-full'}
+        />
+        <Box>
+          <Typography fontSize={{xs: 13, sm: 16}}>{name}</Typography>
+          <Typography fontSize={{xs: 12, sm: 14}}>
+            {truncateAddress ? address.substring(3, 11) : address}
+          </Typography>
+        </Box>
+      </>
     </Box>
   );
 };

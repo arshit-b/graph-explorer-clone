@@ -52,7 +52,16 @@ const TransactionList = ({
                 user={userMap[transaction.targetAddress]}
               />
             </TableCell>
-            <TableCell align="right">{transaction.amount}</TableCell>
+            <TableCell align="right">
+              <Typography fontSize={{xs: 13, sm: 16}}>
+                {Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2,
+                }).format(transaction.amount)}
+              </Typography>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
